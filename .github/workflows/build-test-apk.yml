@@ -1,0 +1,64 @@
+name: Build test APK (Android edit-screen fix)
+
+# Builds the SparkyFitness Android app with the edit-screen layout fix applied.
+# The app is installed as a separate "Sparky TEST" app, so it sits beside the
+# Play Store version instead of replacing it. Run it from the Actions tab.
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      GRADLE_OPTS: "-Dorg.gradle.jvmargs=\"-Xmx6144m -XX:MaxMetaspaceSize=1024m\""
+    steps:
+      - name: Get the SparkyFitness code (version the fix was written against)
+        uses: actions/checkout@v4
+        with:
+          repository: CodeWithCJ/SparkyFitness
+          ref: 985feaa9d8061476862c7d96c745a36307787233
+
+      - name: Apply the fix
+        env:
+          PATCH_B64: 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
+        run: echo "$PATCH_B64" | base64 -d | gunzip | git apply -v
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install and generate the Android project
+        run: |
+          pnpm install --frozen-lockfile
+          cd SparkyFitnessMobile
+          APP_VARIANT=production npx expo prebuild --platform android
+          sed -i 's/^org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx6144m -XX:MaxMetaspaceSize=1024m/' android/gradle.properties
+          sed -i 's/^reactNativeArchitectures=.*/reactNativeArchitectures=arm64-v8a/' android/gradle.properties
+          # Separate app id and name so it installs beside the Play Store app
+          sed -i '0,/applicationId .*/s//&\n        applicationIdSuffix ".fixtest"/' android/app/build.gradle
+          sed -i 's|<string name="app_name">[^<]*</string>|<string name="app_name">Sparky TEST</string>|' android/app/src/main/res/values/strings.xml
+          grep -n "applicationId" android/app/build.gradle
+          echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+          chmod +x android/gradlew
+
+      - name: Build the APK
+        run: |
+          cd SparkyFitnessMobile/android
+          ./gradlew :react-native-async-storage_async-storage:generateCodegenArtifactsFromSchema
+          ./gradlew :app:assembleRelease --stacktrace
+
+      - name: Upload the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: sparky-test-apk
+          path: SparkyFitnessMobile/android/app/build/outputs/apk/release/*.apk
